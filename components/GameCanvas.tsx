@@ -173,7 +173,12 @@ function GameHud({ hud, phase, onExit }: { hud: HudData; phase: GamePhase; onExi
         <HudRow label="药水" value={`${hud.potions} 瓶`} />
         <HudRow label="十字架" value={`${hud.crucifix} 个`} />
         <HudRow label="时间" value={fmtTime(hud.elapsed)} />
-        <Meter label="电量" value={hud.battery} tone={hud.battery < 0.25 ? "danger" : hud.battery < 0.5 ? "warn" : "normal"} />
+        <Meter
+          label="电量"
+          value={hud.battery}
+          percentText={`${Math.round(hud.battery * 100)}%`}
+          tone={hud.battery < 0.25 ? "danger" : hud.battery < 0.5 ? "warn" : "normal"}
+        />
         <Meter label="理智" value={hud.sanity} tone={hud.sanity < 0.3 ? "danger" : hud.sanity < 0.55 ? "warn" : "normal"} />
         <Meter label="体力" value={hud.stamina} tone={hud.stamina < 0.25 ? "warn" : "normal"} />
         <Meter label="声呐" value={hud.scan} tone={hud.scan >= 1 ? "normal" : "dim"} />
@@ -283,17 +288,19 @@ function Meter({
   label,
   value,
   tone,
+  percentText,
 }: {
   label: string;
   value: number;
   tone: "normal" | "dim" | "warn" | "danger";
+  percentText?: string;
 }) {
   const clamped = Math.max(0, Math.min(1, value));
   return (
     <div className={`meter meter-${tone}`}>
       <div className="meter-label">
         <span>{label}</span>
-        <span>{Math.round(clamped * 100)}%</span>
+        <span>{percentText ?? `${Math.round(clamped * 100)}%`}</span>
       </div>
       <div className="meter-track">
         <div className="meter-fill" style={{ width: `${clamped * 100}%` }} />

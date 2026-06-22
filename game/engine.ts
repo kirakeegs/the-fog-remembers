@@ -1,5 +1,5 @@
-﻿import { AudioEngine } from "./audio";
-import { castFlashlight, castVisibility, inAmbient, inFlashlight, CONE_RANGE } from "./flashlight";
+import { AudioEngine } from "./audio";
+import { castFlashlight, castVisibility, inAmbient, inFlashlight, CONE_RANGE, AMBIENT_RANGE } from "./flashlight";
 import { renderDarkness, renderFog, renderDamageFlash, renderGrain, renderLowBattery } from "./fog";
 import { createInput } from "./input";
 import { buildMap, findOpenCells, GameMap, isWall, TILE } from "./map";
@@ -170,7 +170,7 @@ const LEVELS: LevelDesign[] = [
     clueCount: 4,
     sigilCount: 4,
     intro: "第三章 · 灰烬教堂。灰像雪一样落下，落地时却发出翻页声。",
-    clueTexts: ["一个名字从悼词边缘剥落。", "录音里有人把生日歌唱错了。", "儿童画背面写着：我等你。", "墓碑背面没有日期，只有“回家”。"],
+    clueTexts: ["一个名字从悼词边缘剥落。", "录音里有人把生日歌唱错了。", "儿童画背面写着：我等你。", "墓���背面没有日期，只有“回家”。"],
     sigilPrompt: "把名字还给哭泣的幻影。别再把他们叫作事故。",
     exitPrompt: "顺着灰烬飘落的方向走，合唱会在正确方向变清晰。",
     completeText: "幻影抬头，脸仍模糊，但哭声变成了合唱。",
@@ -872,9 +872,11 @@ export class GameEngine {
       if (p.kind === "battery") {
         // 电量可累积，不设上限；每块电池 +100%
         s.player.battery += 1.0;
-        // 拾取后立刻在地图其他位置刷新一块电池
+        // 拾取后立刻在地图其他位置刷新一块电池；若找不到合适位置则收走，
+        // 避免电池停在原地导致玩家站着不动时每帧反复 +100%。
         const relocated = this.scatterCell(TILE * 4, [s.player.pos]);
         if (relocated) p.pos = relocated;
+        else p.taken = true;
         s.messageText = "找到电池，电量 +100%。手电筒更亮了。";
         s.messageTimer = 2.5;
         this.audio.playBattery();
@@ -1271,9 +1273,11 @@ export class GameEngine {
     const shakeX = insanity > 0.4 ? Math.sin(time * 13) * insanity * 2.5 : 0;
     const shakeY = insanity > 0.4 ? Math.cos(time * 11) * insanity * 2.5 : 0;
 
-    this.camera.x = s.player.pos.x - w / 2 + shakeX;
-    this.camera.y = s.player.pos.y - h / 2 + shakeY;
-    const cam = this.camera;
+    // this.camera 保持无抖动，供鼠标瞄准的屏幕→世界坐标映射使用，
+    // 避免理智过低时屏幕抖动让手电方向跟着乱晃。抖动只作用于渲染相机 cam。
+    this.camera.x = s.player.pos.x - w / 2;
+    this.camera.y = s.player.pos.y - h / 2;
+    const cam = { x: this.camera.x + shakeX, y: this.camera.y + shakeY };
 
     ctx.fillStyle = "#0a0a0c";
     ctx.fillRect(0, 0, w, h);
@@ -1282,9 +1286,18 @@ export class GameEngine {
     this.renderExit(ctx, cam);
 
     const screenOrigin: Vec2 = { x: s.player.pos.x - cam.x, y: s.player.pos.y - cam.y };
-    const vis = (pos: Vec2) =>
-      inFlashlight(this.map, s.player.pos, s.player.angle, pos, this.exitOpen, coneRange) ||
-      inAmbient(this.map, s.player.pos, pos, this.exitOpen);
+    // 任何实体只可能在手电锥形或环境光范围内被看到，先用平方距离快速裁剪，
+    // 远处实体直接跳过，省去昂贵的 hasLine 射线投射。
+    const maxVisRangeSq = Math.max(coneRange, AMBIENT_RANGE) ** 2;
+    const vis = (pos: Vec2) => {
+      const dx = pos.x - s.player.pos.x;
+      const dy = pos.y - s.player.pos.y;
+      if (dx * dx + dy * dy > maxVisRangeSq) return false;
+      return (
+        inFlashlight(this.map, s.player.pos, s.player.angle, pos, this.exitOpen, coneRange) ||
+        inAmbient(this.map, s.player.pos, pos, this.exitOpen)
+      );
+    };
 
     for (const p of s.pickups) {
       if (p.taken) continue;

@@ -32,11 +32,9 @@ export default function Home() {
     return () => window.clearInterval(id);
   }, [mode]);
 
+  // 仅在进入标题页或切换曲目时创建/销毁音频元素，避免每次开关都重建导致的竞态
   useEffect(() => {
-    if (mode !== "title") {
-      audioRef.current?.pause();
-      return;
-    }
+    if (mode !== "title") return;
 
     const audio = new Audio(TITLE_TRACKS[trackIndex]);
     audio.loop = true;
@@ -44,23 +42,25 @@ export default function Home() {
     audio.preload = "auto";
     audioRef.current = audio;
 
-    if (musicOn) {
-      audio.play().catch(() => setMusicOn(false));
-    }
-
     return () => {
       audio.pause();
       audio.src = "";
       if (audioRef.current === audio) audioRef.current = null;
     };
-  }, [mode, musicOn, trackIndex]);
+  }, [mode, trackIndex]);
 
-  const toggleMusic = () => {
-    const next = !musicOn;
-    setMusicOn(next);
-    if (next) audioRef.current?.play().catch(() => setMusicOn(false));
-    else audioRef.current?.pause();
-  };
+  // 单独响应播放/暂停状态，作用在已存在的音频元素上
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (musicOn && mode === "title") {
+      audio.play().catch(() => setMusicOn(false));
+    } else {
+      audio.pause();
+    }
+  }, [musicOn, mode, trackIndex]);
+
+  const toggleMusic = () => setMusicOn((value) => !value);
 
   const nextTrack = () => {
     setTrackIndex((value) => (value + 1) % TITLE_TRACKS.length);
