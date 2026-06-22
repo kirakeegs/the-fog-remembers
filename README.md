@@ -48,5 +48,3 @@ npm start
 - `public/assets/ui/recall-sigil.png`：原创 IP 标志
 - `docs/IP_BIBLE.md`：世界观、怪物、章节和禁用元素
 - `docs/ASSET_PIPELINE.md`：AI 生图与本地资产接入规范
-
-API key 不应写入源码、文档或提交记录。生图模型只通过本地环境变量使用。
