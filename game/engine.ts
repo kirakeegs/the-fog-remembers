@@ -306,6 +306,8 @@ export class GameEngine {
   private scanCooldown = 0;
   private survivorsSaved = 0;
   private theme: Theme = themeForDepth(1);
+  private floorTexture: HTMLImageElement | null = null;
+  private floorPattern: CanvasPattern | null = null;
 
   constructor(canvas: HTMLCanvasElement, audio: AudioEngine, cb: EngineCallbacks = {}) {
     this.canvas = canvas;
@@ -318,6 +320,21 @@ export class GameEngine {
     this.map = buildMap(1);
     this.input = createInput(canvas, () => this.camera);
     this.state = this.createInitialState(1);
+    this.loadFloorTexture();
+  }
+
+  private loadFloorTexture() {
+    const image = new Image();
+    image.decoding = "async";
+    image.onload = () => {
+      this.floorTexture = image;
+      this.floorPattern = null;
+    };
+    image.onerror = () => {
+      this.floorTexture = null;
+      this.floorPattern = null;
+    };
+    image.src = "/assets/generated/foggy-asphalt-floor.png";
   }
 
   private loadBest(): number {
@@ -1464,8 +1481,29 @@ export class GameEngine {
     ctx.restore();
   }
 
+  private floorTexturePattern(ctx: CanvasRenderingContext2D, cam: Vec2): CanvasPattern | null {
+    const image = this.floorTexture;
+    if (!image?.complete || image.naturalWidth === 0) return null;
+
+    if (!this.floorPattern) {
+      this.floorPattern = ctx.createPattern(image, "repeat");
+    }
+
+    if (this.floorPattern && "setTransform" in this.floorPattern) {
+      const scale = 0.42;
+      this.floorPattern.setTransform(
+        new DOMMatrix()
+          .translateSelf(-cam.x * scale, -cam.y * scale)
+          .scaleSelf(scale, scale),
+      );
+    }
+
+    return this.floorPattern;
+  }
+
   private renderTiles(ctx: CanvasRenderingContext2D, cam: Vec2, w: number, h: number) {
     const design = levelForDepth(this.state.depth);
+    const floorPattern = this.floorTexturePattern(ctx, cam);
     const startCol = Math.max(0, Math.floor(cam.x / TILE));
     const endCol = Math.min(this.map.cols, Math.ceil((cam.x + w) / TILE));
     const startRow = Math.max(0, Math.floor(cam.y / TILE));
@@ -1502,6 +1540,14 @@ export class GameEngine {
         } else {
           ctx.fillStyle = (r + c) % 2 === 0 ? this.theme.floorA : this.theme.floorB;
           ctx.fillRect(x, y, TILE, TILE);
+          if (floorPattern) {
+            ctx.save();
+            ctx.globalAlpha = 0.2;
+            ctx.globalCompositeOperation = "soft-light";
+            ctx.fillStyle = floorPattern;
+            ctx.fillRect(x, y, TILE, TILE);
+            ctx.restore();
+          }
           ctx.strokeStyle = "rgba(0,0,0,0.22)";
           ctx.lineWidth = 1;
           ctx.strokeRect(x + 0.5, y + 0.5, TILE - 1, TILE - 1);

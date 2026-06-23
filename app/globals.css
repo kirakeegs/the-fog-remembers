@@ -72,7 +72,7 @@ button {
   pointer-events: none;
   background:
     linear-gradient(180deg, rgba(5, 5, 5, 0.12), rgba(5, 5, 5, 0.74) 78%, rgba(3, 3, 3, 0.96)),
-    url("/assets/title/fog-remembers-key-art.png") center / cover no-repeat,
+    url("/assets/generated/fog-remembers-key-art-v2.png") center / cover no-repeat,
     radial-gradient(circle at 50% 42%, rgba(210, 205, 170, 0.18), rgba(30, 31, 29, 0.18) 30%, rgba(0, 0, 0, 0) 54%),
     linear-gradient(180deg, #202220 0%, #111412 34%, #080909 72%, #030303 100%);
 }
@@ -92,7 +92,7 @@ button {
   right: -8%;
   bottom: 30%;
   height: 34%;
-  opacity: 0.5;
+  opacity: 0.16;
   background:
     linear-gradient(90deg, transparent 0 4%, rgba(28, 30, 29, 0.92) 4% 9%, transparent 9% 13%, rgba(26, 27, 26, 0.82) 13% 21%, transparent 21% 26%, rgba(31, 33, 31, 0.9) 26% 33%, transparent 33% 39%, rgba(24, 25, 24, 0.86) 39% 47%, transparent 47% 54%, rgba(29, 31, 30, 0.92) 54% 62%, transparent 62% 66%, rgba(25, 27, 26, 0.84) 66% 72%, transparent 72% 80%, rgba(30, 32, 31, 0.88) 80% 88%, transparent 88% 100%),
     repeating-linear-gradient(90deg, rgba(220, 210, 165, 0.08) 0 2px, transparent 2px 54px);
@@ -110,7 +110,7 @@ button {
     linear-gradient(90deg, transparent 0 45%, rgba(225, 220, 180, 0.18) 48% 52%, transparent 55% 100%),
     linear-gradient(180deg, rgba(55, 54, 49, 0.18), rgba(4, 4, 4, 0.9));
   clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
-  opacity: 0.72;
+  opacity: 0.16;
 }
 
 .cover-traffic {
@@ -118,7 +118,7 @@ button {
   bottom: 25%;
   width: 21%;
   height: 30%;
-  opacity: 0.55;
+  opacity: 0.18;
 }
 
 .cover-traffic-left {
@@ -168,7 +168,7 @@ button {
     radial-gradient(circle at 50% 6%, rgba(215, 205, 175, 0.5), rgba(70, 68, 60, 0.95) 22%, transparent 24%),
     linear-gradient(180deg, transparent 0 17%, rgba(31, 32, 31, 0.96) 17% 100%);
   filter: drop-shadow(0 0 18px rgba(210, 205, 170, 0.2));
-  opacity: 0.74;
+  opacity: 0.24;
   animation: figurePulse 6s ease-in-out infinite;
 }
 
