@@ -3,7 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import GameCanvas from "@/components/GameCanvas";
 
-const TITLE_TRACKS = ["/audio/silent.mp3", "/audio/silent1.mp3", "/audio/silent2.mp3"];
+const TITLE_TRACKS = [
+  { label: "归潮磁带", src: "/audio/silent.mp3" },
+  { label: "疗养院磁带", src: "/audio/silent1.mp3" },
+  { label: "破晓磁带", src: "/audio/silent2.mp3" },
+];
 
 const STORY_LINES = [
   "雾不是天气。它从灰洄镇旧疗养院的地下层升起，穿过锈蚀的铁门，把整座港镇拖进一场迟来的审判。",
@@ -36,7 +40,7 @@ export default function Home() {
   useEffect(() => {
     if (mode !== "title") return;
 
-    const audio = new Audio(TITLE_TRACKS[trackIndex]);
+    const audio = new Audio(TITLE_TRACKS[trackIndex].src);
     audio.loop = true;
     audio.volume = 0.38;
     audio.preload = "auto";
@@ -118,7 +122,7 @@ export default function Home() {
             {musicOn ? "BGM 暂停" : "BGM 播放"}
           </button>
           <button className="ghost-button compact" onClick={nextTrack} type="button">
-            曲目 {trackIndex + 1}
+            {TITLE_TRACKS[trackIndex].label}
           </button>
         </nav>
 
