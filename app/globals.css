@@ -32,11 +32,14 @@ button {
 .title-screen {
   position: relative;
   width: 100vw;
-  min-height: 100svh;
+  height: 100svh;
   padding: 0 clamp(16px, 4vw, 40px) clamp(28px, 6vw, 72px);
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
   background: #050505;
+  --title-ui-opacity: 0.82;
 }
 
 .title-screen::before {
@@ -65,15 +68,19 @@ button {
 }
 
 .cover-scene {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  inset: -1.5%;
   overflow: hidden;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(5, 5, 5, 0.12), rgba(5, 5, 5, 0.74) 78%, rgba(3, 3, 3, 0.96)),
-    url("/assets/generated/fog-remembers-key-art-v2.png") center / cover no-repeat,
+    linear-gradient(180deg, rgba(5, 5, 5, 0.04), rgba(5, 5, 5, 0.42) 58%, rgba(3, 3, 3, 0.9)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.28), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.32)),
+    url("/assets/generated/fog-remembers-cover-street-v3.png") center / cover no-repeat,
     radial-gradient(circle at 50% 42%, rgba(210, 205, 170, 0.18), rgba(30, 31, 29, 0.18) 30%, rgba(0, 0, 0, 0) 54%),
     linear-gradient(180deg, #202220 0%, #111412 34%, #080909 72%, #030303 100%);
+  transform: scale(1.015);
+  animation: coverBreath 24s ease-in-out infinite alternate;
+  will-change: transform, filter;
 }
 
 .cover-scene::before {
@@ -91,7 +98,7 @@ button {
   right: -8%;
   bottom: 30%;
   height: 34%;
-  opacity: 0.16;
+  opacity: 0;
   background:
     linear-gradient(90deg, transparent 0 4%, rgba(28, 30, 29, 0.92) 4% 9%, transparent 9% 13%, rgba(26, 27, 26, 0.82) 13% 21%, transparent 21% 26%, rgba(31, 33, 31, 0.9) 26% 33%, transparent 33% 39%, rgba(24, 25, 24, 0.86) 39% 47%, transparent 47% 54%, rgba(29, 31, 30, 0.92) 54% 62%, transparent 62% 66%, rgba(25, 27, 26, 0.84) 66% 72%, transparent 72% 80%, rgba(30, 32, 31, 0.88) 80% 88%, transparent 88% 100%),
     repeating-linear-gradient(90deg, rgba(220, 210, 165, 0.08) 0 2px, transparent 2px 54px);
@@ -109,7 +116,7 @@ button {
     linear-gradient(90deg, transparent 0 45%, rgba(225, 220, 180, 0.18) 48% 52%, transparent 55% 100%),
     linear-gradient(180deg, rgba(55, 54, 49, 0.18), rgba(4, 4, 4, 0.9));
   clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
-  opacity: 0.16;
+  opacity: 0;
 }
 
 .cover-traffic {
@@ -117,7 +124,7 @@ button {
   bottom: 25%;
   width: 21%;
   height: 30%;
-  opacity: 0.18;
+  opacity: 0.1;
 }
 
 .cover-traffic-left {
@@ -167,7 +174,7 @@ button {
     radial-gradient(circle at 50% 6%, rgba(215, 205, 175, 0.5), rgba(70, 68, 60, 0.95) 22%, transparent 24%),
     linear-gradient(180deg, transparent 0 17%, rgba(31, 32, 31, 0.96) 17% 100%);
   filter: drop-shadow(0 0 18px rgba(210, 205, 170, 0.2));
-  opacity: 0.24;
+  opacity: 0;
   animation: figurePulse 6s ease-in-out infinite;
 }
 
@@ -181,8 +188,8 @@ button {
 .cover-fog {
   inset: -20%;
   z-index: 0;
-  opacity: 0.62;
-  filter: blur(20px);
+  opacity: 0.78;
+  filter: blur(24px);
   background:
     radial-gradient(ellipse at 20% 60%, rgba(205, 205, 180, 0.28), rgba(205, 205, 180, 0) 34%),
     radial-gradient(ellipse at 72% 38%, rgba(110, 130, 124, 0.22), rgba(110, 130, 124, 0) 36%),
@@ -202,7 +209,7 @@ button {
 .cover-ash {
   inset: -20%;
   z-index: 0;
-  opacity: 0.36;
+  opacity: 0.42;
   background-image:
     radial-gradient(circle, rgba(230, 226, 196, 0.22) 0 1px, transparent 1.6px),
     radial-gradient(circle, rgba(130, 36, 28, 0.2) 0 1px, transparent 1.8px);
@@ -232,6 +239,7 @@ button {
   grid-template-rows: auto auto auto auto;
   align-content: center;
   gap: clamp(18px, 3vh, 30px);
+  scroll-snap-align: start;
 }
 
 .title-hero {
@@ -247,7 +255,7 @@ button {
   aspect-ratio: 1;
   margin-bottom: 14px;
   background: url("/assets/ui/recall-sigil.png") center / contain no-repeat;
-  opacity: 0.72;
+  opacity: calc(var(--title-ui-opacity) * 0.8);
   filter: drop-shadow(0 0 18px rgba(214, 198, 130, 0.18));
 }
 
@@ -262,7 +270,7 @@ button {
 .subtitle,
 .footer-note {
   letter-spacing: 0.34em;
-  color: rgba(210, 208, 196, 0.56);
+  color: rgba(210, 208, 196, calc(var(--title-ui-opacity) * 0.68));
 }
 
 .eyebrow {
@@ -280,6 +288,7 @@ button {
   letter-spacing: 0;
   line-height: 1;
   color: #b6b1a0;
+  opacity: var(--title-ui-opacity);
   text-shadow:
     0 0 26px rgba(210, 210, 190, 0.26),
     3px 0 0 rgba(112, 22, 18, 0.2);
@@ -316,6 +325,7 @@ button {
     rgba(7, 7, 7, 0.56);
   box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.5), 0 0 34px rgba(0, 0, 0, 0.34);
   overflow: hidden;
+  opacity: var(--title-ui-opacity);
 }
 
 .story-console::before {
@@ -351,6 +361,31 @@ button {
   justify-items: center;
 }
 
+.cover-tuning {
+  width: min(520px, 100%);
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 12px;
+  border: 1px solid rgba(190, 186, 158, 0.16);
+  background: rgba(0, 0, 0, 0.32);
+  color: rgba(226, 222, 204, calc(var(--title-ui-opacity) * 0.76));
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  opacity: var(--title-ui-opacity);
+}
+
+.cover-tuning input {
+  width: 100%;
+  accent-color: #e7c98a;
+}
+
+.cover-tuning strong {
+  color: rgba(247, 237, 190, 0.86);
+  font-weight: 400;
+}
+
 .tape-deck {
   width: min(520px, 100%);
   display: grid;
@@ -363,6 +398,7 @@ button {
   color: rgba(226, 222, 204, 0.66);
   text-align: center;
   box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.48), 0 0 28px rgba(0, 0, 0, 0.26);
+  opacity: var(--title-ui-opacity);
 }
 
 .deck-label,
@@ -439,6 +475,7 @@ button {
   letter-spacing: 0.18em;
   transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
   white-space: nowrap;
+  opacity: var(--title-ui-opacity);
 }
 
 .primary-button {
@@ -479,6 +516,7 @@ button {
   text-decoration: none;
   text-transform: uppercase;
   animation: cuePulse 2.4s ease-in-out infinite;
+  opacity: calc(var(--title-ui-opacity) * 0.78);
 }
 
 .scroll-cue::after {
@@ -563,6 +601,7 @@ button {
     "protocol terminal";
   gap: 16px;
   align-content: center;
+  scroll-snap-align: start;
 }
 
 .archive-visual,
@@ -753,6 +792,18 @@ button {
   color: rgba(210, 208, 196, 0.56);
   font-size: 12px;
   line-height: 1.7;
+}
+
+.archive-back {
+  float: right;
+  color: rgba(241, 211, 140, 0.78);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+}
+
+.archive-back:hover {
+  color: #fff9db;
 }
 
 .game-shell {
@@ -1159,6 +1210,11 @@ button {
     padding-inline: 14px;
   }
 
+  .cover-tuning {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
   .title-info-grid {
     grid-template-columns: 1fr;
   }
@@ -1286,6 +1342,17 @@ button {
   }
   to {
     transform: translate3d(1.5%, 1%, 0) rotate(-1deg);
+  }
+}
+
+@keyframes coverBreath {
+  from {
+    filter: brightness(0.84) contrast(1.04) saturate(0.9);
+    transform: translate3d(-0.6%, -0.4%, 0) scale(1.015);
+  }
+  to {
+    filter: brightness(0.96) contrast(1.1) saturate(0.96);
+    transform: translate3d(0.7%, 0.4%, 0) scale(1.045);
   }
 }
 

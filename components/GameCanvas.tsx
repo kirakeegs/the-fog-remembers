@@ -188,7 +188,9 @@ function GameHud({ hud, phase, onExit }: { hud: HudData; phase: GamePhase; onExi
 
       <div className="quick-help">
         <span>WASD 移动</span>
+        <span>Shift 冲刺</span>
         <span>鼠标照明</span>
+        <span>Space 挥击</span>
         <span>Q 声呐</span>
         <span>E 互动</span>
         <span>1 药水</span>

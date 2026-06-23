@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import GameCanvas from "@/components/GameCanvas";
 
 const TITLE_TRACKS = [
@@ -29,7 +29,11 @@ const DOSSIERS = [
     code: "FIELD 02",
     title: "用光和声音活下去",
     body: "移动、手电、声呐和道具构成核心节奏。你越急，噪音越高；你越贪，电量越少。所有操作都服务于一个目标：在黑暗里判断方向。",
-    bullets: ["WASD / 方向键移动，鼠标控制手电", "E 互动、解救、完成仪式", "Q 声呐扫描，1 药水护盾，2 十字架定身"],
+    bullets: [
+      "WASD / 方向键移动，鼠标控制手电",
+      "Shift 冲刺，Space 挥击驱散近身怪物",
+      "E 互动、Q 声呐，1 药水护盾，2 十字架定身",
+    ],
   },
   {
     label: "下沉规则",
@@ -55,9 +59,11 @@ export default function Home() {
   const [storyIndex, setStoryIndex] = useState(0);
   const [trackIndex, setTrackIndex] = useState(0);
   const [dossierIndex, setDossierIndex] = useState(0);
+  const [uiOpacity, setUiOpacity] = useState(0.82);
   const [musicOn, setMusicOn] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dossier = DOSSIERS[dossierIndex];
+  const titleStyle = { "--title-ui-opacity": uiOpacity } as CSSProperties;
 
   useEffect(() => {
     setHasSave(typeof window !== "undefined" && GameHasSave());
@@ -111,7 +117,7 @@ export default function Home() {
   }
 
   return (
-    <main className="title-screen vignette">
+    <main className="title-screen vignette" style={titleStyle}>
       <div className="cover-scene" aria-hidden="true">
         <div className="cover-skyline" />
         <div className="cover-traffic cover-traffic-left">
@@ -132,7 +138,7 @@ export default function Home() {
         <div className="cover-static" />
       </div>
 
-      <section className="title-shell">
+      <section id="title-cover" className="title-shell">
         <header className="title-hero">
           <p className="eyebrow">ORIGINAL PSYCHOLOGICAL HORROR / ENDLESS DESCENT</p>
           <h1>雾会记得</h1>
@@ -145,6 +151,20 @@ export default function Home() {
         </section>
 
         <section className="title-command-deck" aria-label="launch controls">
+          <div className="cover-tuning" aria-label="title text opacity">
+            <span>文字显影</span>
+            <input
+              aria-label="调节封面文字透明度"
+              max="1"
+              min="0.46"
+              onChange={(event) => setUiOpacity(Number(event.target.value))}
+              step="0.02"
+              type="range"
+              value={uiOpacity}
+            />
+            <strong>{Math.round(uiOpacity * 100)}%</strong>
+          </div>
+
           <div className="tape-deck">
             <span className="deck-label">NOW PLAYING</span>
             <strong>{TITLE_TRACKS[trackIndex].label}</strong>
@@ -212,6 +232,9 @@ export default function Home() {
         </div>
 
         <aside className="protocol-board" aria-label="survival loop">
+          <a className="archive-back" href="#title-cover">
+            返回封面
+          </a>
           <span>RUN LOOP</span>
           <h2>一局的核心玩法</h2>
           <ol>
