@@ -120,7 +120,8 @@ export default function Home() {
   const [trackIndex, setTrackIndex] = useState(0);
   const [dossierIndex, setDossierIndex] = useState(0);
   const [uiOpacity, setUiOpacity] = useState(0.82);
-  const [musicOn, setMusicOn] = useState(false);
+  const [musicOn, setMusicOn] = useState(true);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dossier = DOSSIERS[dossierIndex];
   const titleStyle = { "--title-ui-opacity": uiOpacity } as CSSProperties;
@@ -159,17 +160,39 @@ export default function Home() {
     const audio = audioRef.current;
     if (!audio) return;
     if (musicOn && mode === "title") {
-      audio.play().catch(() => setMusicOn(false));
+      audio.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true));
     } else {
       audio.pause();
+      setAutoplayBlocked(false);
     }
   }, [musicOn, mode, trackIndex]);
 
-  const toggleMusic = () => setMusicOn((value) => !value);
+  useEffect(() => {
+    if (mode !== "title" || !musicOn) return;
+
+    const resumeTitleMusic = () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      audio.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true));
+    };
+
+    window.addEventListener("pointerdown", resumeTitleMusic);
+    window.addEventListener("keydown", resumeTitleMusic);
+    return () => {
+      window.removeEventListener("pointerdown", resumeTitleMusic);
+      window.removeEventListener("keydown", resumeTitleMusic);
+    };
+  }, [mode, musicOn]);
+
+  const toggleMusic = () => {
+    setMusicOn((value) => !value);
+    setAutoplayBlocked(false);
+  };
 
   const nextTrack = () => {
     setTrackIndex((value) => (value + 1) % TITLE_TRACKS.length);
     setMusicOn(true);
+    setAutoplayBlocked(false);
   };
 
   if (mode !== "title") {
@@ -225,10 +248,21 @@ export default function Home() {
             <strong>{Math.round(uiOpacity * 100)}%</strong>
           </div>
 
-          <div className="tape-deck">
+          <div className={`tape-deck ${musicOn && !autoplayBlocked ? "is-playing" : ""}`}>
             <span className="deck-label">NOW PLAYING</span>
             <strong>{TITLE_TRACKS[trackIndex].label}</strong>
-            <span>{musicOn ? "磁带正在转动" : "磁带待机，按播放唤醒封面音轨"}</span>
+            <div className="cassette-window" aria-hidden="true">
+              <span className="cassette-reel cassette-reel-left" />
+              <span className="cassette-band" />
+              <span className="cassette-reel cassette-reel-right" />
+            </div>
+            <span>
+              {autoplayBlocked
+                ? "浏览器等待一次点击后开始播放"
+                : musicOn
+                  ? "磁带正在转动"
+                  : "磁带待机，按播放唤醒封面音轨"}
+            </span>
           </div>
 
           <nav className="title-actions" aria-label="main actions">
