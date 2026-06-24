@@ -5,20 +5,38 @@
 - `public/assets/title/fog-remembers-key-art.png`
 - `public/assets/title/fog-remembers-grain.png`
 - `public/assets/ui/recall-sigil.png`
+- `public/assets/scenes/scene-tidal-street.png`：归潮街口关卡载入档案图
+- `public/assets/qa/generated-asset-contact-sheet.png`：本轮生成资产总览图，仅用于人工检查
+- `public/assets/scenes/`：关卡载入档案图，文件名必须匹配 `artPromptId`
+- `public/assets/monsters/`：怪物档案图或未来 sprite 参考
+- `public/assets/items/`：道具图标或未来 pickup 参考
+- `public/assets/characters/`：主角、幸存者、幻觉参考图
 
 这些资产已接入标题页 CSS，可以直接随 Next.js 静态托管。
+游戏内部的关卡档案面板会自动尝试加载 `/assets/scenes/{artPromptId}.png`。如果图片尚未生成，会显示代码内置的低成本占位视觉。
 
 ## AI 生图安全规则
 
-不要把 API key 写进仓库。需要调用外部生图服务时，在本机 PowerShell 设置环境变量：
+不要把 API key 写进仓库。需要调用外部生图或审图服务时，把 `.env.example` 复制为 `.env.local`，再只在本机填写真实密钥。
+
+审图供应商配置：
 
 ```powershell
-$env:FOG_IMAGE_API_KEY = "..."
-$env:FOG_IMAGE_BASE_URL = "https://example.com"
-$env:FOG_IMAGE_MODEL = "gpt-image-2"
+FOG_IMAGE_REVIEW_PROVIDER=openai-compatible
+FOG_IMAGE_REVIEW_BASE_URL=https://jiuuij.de5.net
+FOG_IMAGE_REVIEW_MODEL=gpt-image-2
+FOG_IMAGE_REVIEW_API_KEY=...
 ```
 
-如果使用另一个兼容服务，改成对应的 `BASE_URL` 和 `MODEL`。密钥只应存在于当前 shell 环境或系统安全凭据中。
+底层代码通过 `lib/server/imageReviewProvider.ts` 读取这些变量。这个模块只能在服务端或 Node 脚本中使用，不要从客户端组件导入，避免把密钥打进浏览器包。
+
+本地检查：
+
+```bash
+npm run check:image-review
+```
+
+如果使用另一个兼容服务，改成对应的 `BASE_URL` 和 `MODEL`。密钥只应存在于 `.env.local`、当前 shell 环境或系统安全凭据中。
 
 ## 主视觉提示词
 
@@ -53,6 +71,7 @@ Constraints: original mark, no religious trademark symbols, no watermark
 ## 接入规范
 
 - 标题主视觉放在 `public/assets/title`。
+- 关卡载入档案图放在 `public/assets/scenes`，文件名使用 `提示词.md` 中的提示词 ID。
 - UI 小图标放在 `public/assets/ui`。
 - 怪物概念图放在 `public/assets/monsters`。
 - 文件名使用小写短横线。

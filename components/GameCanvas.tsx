@@ -30,6 +30,9 @@ const initialHud: HudData = {
   levelTitle: "归潮街口",
   emotion: "压抑",
   mechanic: "雾中潜行",
+  intro: "第一章 · 归潮街口。路灯在雾里像病斑，铃声从没有孩子的街口传来。",
+  dossier: "住宅街被雾折叠成同一个路口。邮箱、车铃和迟到的承诺会把你带回第一处罪证。",
+  artPromptId: "scene-tidal-street",
   clueLabel: "物证",
   sigilLabel: "信箱",
   exitLabel: "家门",
@@ -44,6 +47,7 @@ export default function GameCanvas({ onExit, continueRun }: { onExit: () => void
   const audioRef = useRef<AudioEngine | null>(null);
   const [phase, setPhase] = useState<GamePhase>("playing");
   const [hud, setHud] = useState<HudData>(initialHud);
+  const [dossierVisible, setDossierVisible] = useState(true);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -104,9 +108,10 @@ export default function GameCanvas({ onExit, continueRun }: { onExit: () => void
     <div className="game-shell vignette">
       <canvas ref={canvasRef} className="game-canvas" />
       <GameHud hud={hud} phase={phase} onExit={onExit} />
+      <LevelDossier hud={hud} phase={phase} onVisibleChange={setDossierVisible} />
       <MusicPanel audioRef={audioRef} phase={phase} />
       <ObjectivePanel hud={hud} phase={phase} />
-      <MessageOverlay engineRef={engineRef} phase={phase} />
+      <MessageOverlay dossierVisible={dossierVisible} engineRef={engineRef} phase={phase} />
       <TouchControls engineRef={engineRef} audioRef={audioRef} phase={phase} />
 
       {phase === "paused" && (
@@ -261,6 +266,76 @@ function HudRow({ label, value }: { label: string; value: string }) {
   );
 }
 
+function LevelDossier({
+  hud,
+  phase,
+  onVisibleChange,
+}: {
+  hud: HudData;
+  phase: GamePhase;
+  onVisibleChange: (visible: boolean) => void;
+}) {
+  const [visible, setVisible] = useState(true);
+  const [artReady, setArtReady] = useState(false);
+  const key = `${hud.depth}-${hud.levelTitle}`;
+  const artSrc = `/assets/scenes/${hud.artPromptId}.png`;
+
+  useEffect(() => {
+    if (phase !== "playing") return;
+    setVisible(true);
+    onVisibleChange(true);
+    const id = window.setTimeout(() => {
+      setVisible(false);
+      onVisibleChange(false);
+    }, 6200);
+    return () => window.clearTimeout(id);
+  }, [key, onVisibleChange, phase]);
+
+  useEffect(() => {
+    if (phase !== "playing") onVisibleChange(false);
+  }, [onVisibleChange, phase]);
+
+  useEffect(() => {
+    setArtReady(false);
+  }, [artSrc]);
+
+  if (phase !== "playing" || !visible) return null;
+
+  return (
+    <aside className="level-dossier" aria-label="level dossier">
+      <div className={`dossier-art dossier-art-${hud.emotion}`} aria-hidden="true">
+        <img
+          alt=""
+          className={artReady ? "is-ready" : ""}
+          onError={() => setArtReady(false)}
+          onLoad={() => setArtReady(true)}
+          src={artSrc}
+        />
+        <span>{hud.artPromptId}</span>
+      </div>
+      <div className="dossier-copy">
+        <span className="dossier-kicker">FOG ARCHIVE / DEPTH {String(hud.depth).padStart(2, "0")}</span>
+        <strong>{hud.chapter} · {hud.levelTitle}</strong>
+        <p>{hud.dossier}</p>
+        <em>{hud.intro}</em>
+        <small>
+          目标：寻找{hud.clueLabel}，完成{hud.sigilLabel}，显影{hud.exitLabel}。
+        </small>
+      </div>
+      <button
+        type="button"
+        onClick={() => {
+          setVisible(false);
+          onVisibleChange(false);
+        }}
+        aria-label="关闭关卡档案"
+      >
+        ×
+      </button>
+    </aside>
+  );
+}
+
 function ObjectivePanel({ hud, phase }: { hud: HudData; phase: GamePhase }) {
   if (phase === "caught" || phase === "escaped") return null;
 
@@ -345,9 +420,11 @@ function Overlay({
 }
 
 function MessageOverlay({
+  dossierVisible,
   engineRef,
   phase,
 }: {
+  dossierVisible: boolean;
   engineRef: React.RefObject<GameEngine | null>;
   phase: GamePhase;
 }) {
@@ -365,7 +442,7 @@ function MessageOverlay({
   }, [engineRef]);
 
   if (phase !== "playing" || !msg) return null;
-  return <div className="message-overlay">{msg}</div>;
+  return <div className={`message-overlay ${dossierVisible ? "with-dossier" : ""}`}>{msg}</div>;
 }
 
 function TouchControls({

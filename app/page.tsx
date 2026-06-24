@@ -53,6 +53,66 @@ const DOSSIERS = [
 
 const SURVIVAL_LOOP = ["侦听线索", "搜集物证", "完成仪式", "解救幸存者", "显影出口", "继续下沉"];
 
+const STORY_ARC = [
+  {
+    code: "CHAPTER 01",
+    title: "归潮街口",
+    subtitle: "雾先记起迟到的人",
+    image: "/assets/scenes/scene-tidal-street.png",
+    body:
+      "你在灰洄镇醒来。邮箱里没有信，水洼里却有一枚婚戒。车铃从没有孩子的街口传来，像有人还在等一句“我马上回来”。",
+    beats: ["拾回钥匙、小票、婚戒", "关闭公寓里的争吵收音机", "电梯打开时，家门变成医院走廊"],
+  },
+  {
+    code: "CHAPTER 02",
+    title: "铁锈医院",
+    subtitle: "心跳比怪物更吵",
+    image: "/assets/scenes/scene-rust-hospital.png",
+    body:
+      "手术灯照着一件小小的雨衣。你拉下急救电闸，走廊醒来，输液管垂下，像要替你数清那晚刹车前的每一次心跳。",
+    beats: ["让三台急救电闸重新亮起", "在肉墙地下道搬运心脏保险丝", "配电箱尖叫后，事故现场从墙缝里显影"],
+  },
+  {
+    code: "CHAPTER 03",
+    title: "灰烬教堂",
+    subtitle: "不要再把他们叫作事故",
+    image: "/assets/scenes/scene-ash-church.png",
+    body:
+      "灰烬落地时像翻页。那些没有脸的人跪在长椅之间，等待自己的名字。你越往前走，越明白救赎不是删掉记忆，而是承认它发生过。",
+    beats: ["把名字还给幻影", "在沉没学校找回作业本", "黑板浮现：我等到天黑"],
+  },
+  {
+    code: "CHAPTER 04",
+    title: "破晓海岸",
+    subtitle: "真相不等于原谅",
+    image: "/assets/scenes/scene-dawn-coast.png",
+    body:
+      "退潮露出车灯碎片、病历夹和街牌。镜子把争吵拼回原样。黑影转身离开，没有原谅你，也没有诅咒你，只把病房门留在晨光里。",
+    beats: ["转动反光镜，让阴影承认真相", "在病房放下药水、十字架、手电和婚戒", "孩子问：你还会忘记我吗"],
+  },
+];
+
+const CAST_CARDS = [
+  { name: "主角", role: "携灯者", image: "/assets/characters/character-survivor-player.png", text: "他不是英雄，只是终于愿意沿着雾往回走。" },
+  { name: "幸存者", role: "同行者", image: "/assets/characters/character-rescued-survivor.png", text: "她会跟着你下沉，也会在必要时替你挡下一次死亡。" },
+  { name: "幻觉影子", role: "理智裂缝", image: "/assets/characters/hallucination-shadow.png", text: "当理智降低，它们会站在视野边缘，提醒你记忆正在失真。" },
+];
+
+const THREAT_CARDS = [
+  { name: "徘徊者", image: "/assets/monsters/monster-wanderer.png", text: "被遗忘的轮廓。它不急着追你，只是在雾里重复同一段路。" },
+  { name: "追猎者", image: "/assets/monsters/monster-stalker.png", text: "听见逃跑就开始靠近。越慌张，它越像已经知道你会往哪边跑。" },
+  { name: "聆听者", image: "/assets/monsters/monster-listener.png", text: "没有眼睛，只收集声音。静止有时比奔跑更像生路。" },
+  { name: "残暴者", image: "/assets/monsters/monster-brute.png", text: "缓慢、沉重、不可争辩。它像事故本身，迟早会走到你面前。" },
+  { name: "匍匐者", image: "/assets/monsters/monster-crawler.png", text: "贴着地面从水声里滑出。你看见它时，距离通常已经不够了。" },
+];
+
+const ITEM_CARDS = [
+  { name: "电池", image: "/assets/items/item-battery.png", text: "让手电多活一段路，但不能替你决定照向哪里。" },
+  { name: "药水", image: "/assets/items/item-potion.png", text: "十秒之内，死亡认不出你。十秒之后，它会重新点名。" },
+  { name: "十字架", image: "/assets/items/item-crucifix-relic.png", text: "短暂定住附近的怪物。这里的信仰只剩延迟，不剩答案。" },
+  { name: "线索纸条", image: "/assets/items/item-clue-note.png", text: "每张纸都像证词的一角。拼齐它们，出口才会显影。" },
+];
+
 export default function Home() {
   const [mode, setMode] = useState<"title" | "new" | "continue">("title");
   const [hasSave, setHasSave] = useState(false);
@@ -245,7 +305,71 @@ export default function Home() {
           <p>建议佩戴耳机。存档会记录你到达的最深层数和携带的道具。</p>
         </aside>
       </section>
+
+      <section id="story-pages" className="story-pages" aria-label="complete story archive">
+        <header className="story-pages-heading">
+          <span>COMPLETE CASE THREAD</span>
+          <h2>雾档案：从下沉到晨光</h2>
+          <p>这是一条完整闭环：迟到、否认、追责、归还名字、承认真相，最后在病房里放下所有用来逃避死亡的东西。</p>
+        </header>
+
+        <div className="story-arc">
+          {STORY_ARC.map((chapter, index) => (
+            <article className="story-card" key={chapter.code}>
+              <div className="story-card-image">
+                <img alt="" src={chapter.image} />
+                <span>{chapter.code}</span>
+              </div>
+              <div className="story-card-copy">
+                <small>{String(index + 1).padStart(2, "0")} / 04</small>
+                <h3>{chapter.title}</h3>
+                <strong>{chapter.subtitle}</strong>
+                <p>{chapter.body}</p>
+                <ul>
+                  {chapter.beats.map((beat) => (
+                    <li key={beat}>{beat}</li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <section className="story-compendium" aria-label="characters threats and items">
+          <CompendiumGroup title="同行者与幻觉" cards={CAST_CARDS} />
+          <CompendiumGroup title="雾中威胁" cards={THREAT_CARDS} compact />
+          <CompendiumGroup title="求生物件" cards={ITEM_CARDS} compact />
+        </section>
+      </section>
     </main>
+  );
+}
+
+function CompendiumGroup({
+  title,
+  cards,
+  compact = false,
+}: {
+  title: string;
+  cards: Array<{ name: string; role?: string; image: string; text: string }>;
+  compact?: boolean;
+}) {
+  return (
+    <div className={`compendium-group ${compact ? "is-compact" : ""}`}>
+      <h3>{title}</h3>
+      <div className="compendium-grid">
+        {cards.map((card) => (
+          <article className="compendium-card" key={card.name}>
+            <img alt="" src={card.image} />
+            <div>
+              <strong>{card.name}</strong>
+              {card.role && <span>{card.role}</span>}
+              <p>{card.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
   );
 }
 

@@ -806,6 +806,235 @@ button {
   color: #fff9db;
 }
 
+.story-pages {
+  position: relative;
+  z-index: 2;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: clamp(44px, 8vh, 88px) 0 clamp(70px, 10vh, 120px);
+  scroll-snap-align: start;
+}
+
+.story-pages-heading {
+  width: min(760px, 100%);
+  margin-bottom: 22px;
+}
+
+.story-pages-heading span,
+.compendium-group h3 {
+  color: rgba(241, 211, 140, 0.66);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+}
+
+.story-pages-heading h2 {
+  margin-top: 10px;
+  color: rgba(226, 222, 204, 0.94);
+  font-size: clamp(30px, 5vw, 58px);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.story-pages-heading p {
+  margin-top: 14px;
+  color: rgba(232, 226, 199, 0.68);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.story-arc {
+  display: grid;
+  gap: 18px;
+}
+
+.story-card {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.92fr) minmax(320px, 1.08fr);
+  min-height: 330px;
+  border: 1px solid rgba(190, 186, 158, 0.18);
+  background:
+    linear-gradient(135deg, rgba(120, 28, 22, 0.12), rgba(0, 0, 0, 0.16)),
+    rgba(7, 7, 7, 0.58);
+  box-shadow: 0 0 34px rgba(0, 0, 0, 0.34);
+  overflow: hidden;
+  backdrop-filter: blur(2px);
+}
+
+.story-card:nth-child(even) {
+  grid-template-columns: minmax(320px, 1.08fr) minmax(320px, 0.92fr);
+}
+
+.story-card:nth-child(even) .story-card-image {
+  order: 2;
+}
+
+.story-card-image {
+  position: relative;
+  min-height: 330px;
+  background: #0b0b0a;
+  overflow: hidden;
+}
+
+.story-card-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  filter: saturate(0.86) contrast(1.04);
+}
+
+.story-card-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 46%, rgba(0, 0, 0, 0.62) 100%),
+    linear-gradient(180deg, transparent 0 62%, rgba(0, 0, 0, 0.72) 100%);
+}
+
+.story-card-image span {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  z-index: 1;
+  color: rgba(245, 230, 180, 0.76);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.story-card-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(22px, 4vw, 42px);
+}
+
+.story-card-copy small {
+  color: rgba(241, 211, 140, 0.58);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.story-card-copy h3 {
+  margin-top: 10px;
+  color: #e7c98a;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.story-card-copy strong {
+  margin-top: 8px;
+  color: rgba(232, 226, 199, 0.86);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.story-card-copy p {
+  margin-top: 18px;
+  color: rgba(232, 226, 199, 0.72);
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.story-card-copy ul {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+  list-style: none;
+}
+
+.story-card-copy li {
+  color: rgba(226, 222, 204, 0.68);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.story-card-copy li::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 10px 2px 0;
+  background: rgba(241, 211, 140, 0.72);
+}
+
+.story-compendium {
+  display: grid;
+  gap: 22px;
+  margin-top: 26px;
+}
+
+.compendium-group {
+  border: 1px solid rgba(190, 186, 158, 0.18);
+  background: rgba(7, 7, 7, 0.58);
+  padding: clamp(16px, 3vw, 24px);
+  box-shadow: 0 0 34px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+}
+
+.compendium-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.compendium-group.is-compact .compendium-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.compendium-card {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 12px;
+  min-height: 116px;
+  padding: 10px;
+  border: 1px solid rgba(190, 186, 158, 0.12);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.compendium-group.is-compact .compendium-card {
+  grid-template-columns: 1fr;
+}
+
+.compendium-card img {
+  width: 84px;
+  height: 96px;
+  object-fit: cover;
+  border: 1px solid rgba(190, 186, 158, 0.14);
+  background: #080807;
+}
+
+.compendium-group.is-compact .compendium-card img {
+  width: 100%;
+  height: 128px;
+}
+
+.compendium-card strong,
+.compendium-card span,
+.compendium-card p {
+  display: block;
+}
+
+.compendium-card strong {
+  color: #e7c98a;
+  font-size: 15px;
+}
+
+.compendium-card span {
+  margin-top: 4px;
+  color: rgba(190, 205, 210, 0.68);
+  font-size: 12px;
+}
+
+.compendium-card p {
+  margin-top: 8px;
+  color: rgba(232, 226, 199, 0.62);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 .game-shell {
   position: relative;
   width: 100vw;
@@ -824,6 +1053,7 @@ button {
 .hud-panel,
 .quick-help,
 .music-panel,
+.level-dossier,
 .objective-panel,
 .message-overlay,
 .end-panel {
@@ -863,6 +1093,153 @@ button {
   color: rgba(190, 205, 210, 0.72);
   font-style: normal;
   font-size: 12px;
+}
+
+.level-dossier {
+  left: 50%;
+  bottom: 28px;
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: stretch;
+  width: min(680px, calc(100vw - 36px));
+  min-height: 132px;
+  padding: 12px;
+  color: rgba(232, 226, 199, 0.88);
+  transform: translateX(-50%);
+}
+
+.dossier-art {
+  position: relative;
+  overflow: hidden;
+  min-height: 108px;
+  border: 1px solid rgba(231, 201, 138, 0.18);
+  background:
+    linear-gradient(135deg, rgba(210, 190, 130, 0.12), rgba(0, 0, 0, 0.15)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 12px),
+    radial-gradient(circle at 60% 38%, rgba(225, 215, 175, 0.18), rgba(20, 22, 21, 0.18) 35%, rgba(0, 0, 0, 0.64) 100%);
+}
+
+.dossier-art::before {
+  content: "";
+  position: absolute;
+  inset: 14px 18px;
+  opacity: 0.62;
+  background:
+    radial-gradient(ellipse at 50% 16%, rgba(235, 228, 190, 0.55) 0 7px, transparent 8px),
+    linear-gradient(180deg, transparent 0 24%, rgba(30, 31, 30, 0.96) 24% 100%);
+  filter: blur(0.2px);
+}
+
+.dossier-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  object-fit: cover;
+  transition: opacity 240ms ease;
+}
+
+.dossier-art img.is-ready {
+  opacity: 0.74;
+}
+
+.dossier-art img.is-ready + span {
+  color: rgba(245, 230, 180, 0.7);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+}
+
+.dossier-art:has(img.is-ready)::before {
+  inset: 0;
+  opacity: 1;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.18) 48%, rgba(0, 0, 0, 0.7) 100%),
+    radial-gradient(circle at 50% 44%, transparent 0 42%, rgba(0, 0, 0, 0.58) 100%);
+}
+
+.dossier-art-恐怖 {
+  background:
+    linear-gradient(135deg, rgba(115, 28, 22, 0.22), rgba(0, 0, 0, 0.16)),
+    repeating-linear-gradient(0deg, rgba(150, 40, 28, 0.08) 0 2px, transparent 2px 10px),
+    radial-gradient(circle at 50% 46%, rgba(120, 32, 24, 0.35), rgba(0, 0, 0, 0.75) 70%);
+}
+
+.dossier-art-悲伤 {
+  background:
+    linear-gradient(135deg, rgba(150, 155, 145, 0.14), rgba(0, 0, 0, 0.18)),
+    repeating-linear-gradient(90deg, rgba(210, 215, 200, 0.045) 0 1px, transparent 1px 16px),
+    radial-gradient(circle at 50% 42%, rgba(165, 170, 155, 0.25), rgba(0, 0, 0, 0.68) 72%);
+}
+
+.dossier-art-释怀 {
+  background:
+    linear-gradient(135deg, rgba(210, 185, 120, 0.13), rgba(0, 0, 0, 0.12)),
+    repeating-linear-gradient(90deg, rgba(255, 245, 205, 0.045) 0 1px, transparent 1px 18px),
+    radial-gradient(circle at 72% 18%, rgba(235, 214, 155, 0.35), rgba(35, 45, 38, 0.32) 44%, rgba(0, 0, 0, 0.58) 100%);
+}
+
+.dossier-art span {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  overflow: hidden;
+  color: rgba(232, 226, 199, 0.46);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dossier-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  line-height: 1.5;
+}
+
+.dossier-kicker {
+  color: rgba(231, 201, 138, 0.58);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+}
+
+.dossier-copy strong {
+  margin-top: 2px;
+  color: #f1d38c;
+  font-size: 16px;
+}
+
+.dossier-copy p,
+.dossier-copy em,
+.dossier-copy small {
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+}
+
+.dossier-copy p {
+  color: rgba(232, 226, 199, 0.82);
+  font-size: 13px;
+}
+
+.dossier-copy em {
+  color: rgba(190, 205, 210, 0.68);
+  font-style: normal;
+  font-size: 12px;
+}
+
+.dossier-copy small {
+  color: rgba(232, 226, 199, 0.54);
+  font-size: 11px;
+}
+
+.level-dossier button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(190, 186, 158, 0.18);
+  background: rgba(0, 0, 0, 0.24);
+  color: rgba(232, 226, 199, 0.62);
 }
 
 .hud-panel {
@@ -1026,6 +1403,10 @@ button {
   font-size: 15px;
   line-height: 1.6;
   text-align: center;
+}
+
+.message-overlay.with-dossier {
+  bottom: 178px;
 }
 
 .end-overlay {
@@ -1254,6 +1635,46 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .story-pages {
+    padding-top: 42px;
+  }
+
+  .story-card,
+  .story-card:nth-child(even) {
+    grid-template-columns: 1fr;
+  }
+
+  .story-card:nth-child(even) .story-card-image {
+    order: initial;
+  }
+
+  .story-card-image {
+    min-height: 230px;
+  }
+
+  .story-card-copy {
+    padding: 20px;
+  }
+
+  .story-card-copy p {
+    font-size: 14px;
+  }
+
+  .compendium-grid,
+  .compendium-group.is-compact .compendium-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compendium-group.is-compact .compendium-card {
+    grid-template-columns: 82px minmax(0, 1fr);
+  }
+
+  .compendium-group.is-compact .compendium-card img,
+  .compendium-card img {
+    width: 82px;
+    height: 92px;
+  }
+
   .control-list {
     grid-template-columns: 1fr;
   }
@@ -1296,6 +1717,33 @@ button {
     font-size: 12px;
   }
 
+  .level-dossier {
+    right: 16px;
+    bottom: 294px;
+    left: 16px;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    width: auto;
+    min-height: 104px;
+    transform: none;
+    padding: 10px;
+  }
+
+  .dossier-art {
+    min-height: 84px;
+  }
+
+  .dossier-copy strong {
+    font-size: 14px;
+  }
+
+  .dossier-copy p {
+    font-size: 12px;
+  }
+
+  .dossier-copy em {
+    display: none;
+  }
+
   .quick-help {
     display: none;
   }
@@ -1309,6 +1757,10 @@ button {
     padding: 10px 12px;
     font-size: 12px;
     line-height: 1.45;
+  }
+
+  .message-overlay.with-dossier {
+    bottom: 412px;
   }
 
   .hud-panel {

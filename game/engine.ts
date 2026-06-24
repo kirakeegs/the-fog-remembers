@@ -66,6 +66,8 @@ interface LevelDesign {
   title: string;
   emotion: string;
   mechanic: string;
+  dossier: string;
+  artPromptId: string;
   clueLabel: string;
   sigilLabel: string;
   exitLabel: string;
@@ -87,6 +89,8 @@ const LEVELS: LevelDesign[] = [
     title: "归潮街口",
     emotion: "压抑",
     mechanic: "雾中潜行",
+    dossier: "住宅街被雾折叠成同一个路口。邮箱、车铃和迟到的承诺会把你带回第一处罪证。",
+    artPromptId: "scene-tidal-street",
     clueLabel: "物证",
     sigilLabel: "信箱",
     exitLabel: "家门",
@@ -106,6 +110,8 @@ const LEVELS: LevelDesign[] = [
     title: "废弃公寓",
     emotion: "压抑",
     mechanic: "声源定位",
+    dossier: "每扇门后都是同一间客厅。收音机保留了争吵，走廊会在你关闭噪声后重新排列。",
+    artPromptId: "scene-abandoned-apartment",
     clueLabel: "收音机",
     sigilLabel: "静音点",
     exitLabel: "电梯",
@@ -125,6 +131,8 @@ const LEVELS: LevelDesign[] = [
     title: "铁锈医院",
     emotion: "恐怖",
     mechanic: "狂暴追逐",
+    dossier: "病床倒挂，手术灯像审讯灯。你要让急救电闸重新亮起，直到雨衣下面的空洞无法再被忽略。",
+    artPromptId: "scene-rust-hospital",
     clueLabel: "急救电闸",
     sigilLabel: "手术灯",
     exitLabel: "手术室",
@@ -144,6 +152,8 @@ const LEVELS: LevelDesign[] = [
     title: "肉墙地下道",
     emotion: "恐怖",
     mechanic: "噪音搬运",
+    dossier: "地下道像活物一样收缩。心脏保险丝越接近配电箱越吵，聆听者也会越快醒来。",
+    artPromptId: "scene-flesh-tunnel",
     clueLabel: "心脏保险丝",
     sigilLabel: "配电箱",
     exitLabel: "肉墙裂缝",
@@ -163,6 +173,8 @@ const LEVELS: LevelDesign[] = [
     title: "灰烬教堂",
     emotion: "悲伤",
     mechanic: "名字归还",
+    dossier: "灰烬落地时像翻页。无脸幻影跪在破碎长椅之间，等待你把名字还给他们。",
+    artPromptId: "scene-ash-church",
     clueLabel: "名字",
     sigilLabel: "幻影",
     exitLabel: "灰门",
@@ -182,6 +194,8 @@ const LEVELS: LevelDesign[] = [
     title: "沉没学校",
     emotion: "悲伤",
     mechanic: "重力与水位",
+    dossier: "课桌漂在灰白水面上，钢琴反复弹错同一个音。作业本仍在等一个不会来的批改。",
+    artPromptId: "scene-sunken-school",
     clueLabel: "作业本",
     sigilLabel: "座位",
     exitLabel: "海岸门",
@@ -201,6 +215,8 @@ const LEVELS: LevelDesign[] = [
     title: "破晓海岸",
     emotion: "释怀",
     mechanic: "光影重构",
+    dossier: "退潮后的沙滩露出病历夹、车灯碎片和街牌。反光镜会让阴影承认真相。",
+    artPromptId: "scene-dawn-coast",
     clueLabel: "影像碎片",
     sigilLabel: "反光镜",
     exitLabel: "病房门",
@@ -220,6 +236,8 @@ const LEVELS: LevelDesign[] = [
     title: "晨曦病房",
     emotion: "释怀",
     mechanic: "放下与等待",
+    dossier: "窗帘后有风，铁锈从床架上剥落。最后一层不再要求你战斗，只要求你放下。",
+    artPromptId: "scene-dawn-ward",
     clueLabel: "遗物",
     sigilLabel: "床头柜",
     exitLabel: "晨光",
@@ -280,6 +298,9 @@ export interface HudData {
   levelTitle: string;
   emotion: string;
   mechanic: string;
+  intro: string;
+  dossier: string;
+  artPromptId: string;
   clueLabel: string;
   sigilLabel: string;
   exitLabel: string;
@@ -703,6 +724,9 @@ export class GameEngine {
       levelTitle: design.title,
       emotion: design.emotion,
       mechanic: design.mechanic,
+      intro: design.intro,
+      dossier: design.dossier,
+      artPromptId: design.artPromptId,
       clueLabel: design.clueLabel,
       sigilLabel: design.sigilLabel,
       exitLabel: design.exitLabel,
@@ -2336,6 +2360,8 @@ function levelForDepth(depth: number): LevelDesign {
     title: `${name} B${depth}`,
     emotion: depth % 3 === 0 ? "恐怖" : depth % 3 === 1 ? "压抑" : "悲伤",
     mechanic: ENDLESS_MECHANICS[loop % ENDLESS_MECHANICS.length],
+    dossier: "熟悉的地点被雾重新拼错。这里没有新的解释，只有更深的回声和更多补给。",
+    artPromptId: "scene-endless-descent",
     clueLabel,
     sigilLabel,
     exitLabel,

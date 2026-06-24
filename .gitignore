@@ -19,8 +19,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# env files
+.env*
+
+# internal docs (private)
+交付文件/
+提示词.md
 
 # vercel
 .vercel

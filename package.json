@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "qa:smoke": "node scripts/qa-smoke.mjs",
+    "check:image-review": "node scripts/check-image-review-config.mjs"
   },
   "dependencies": {
     "next": "15.1.11",
